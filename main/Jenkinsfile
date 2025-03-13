@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Setup') {
+            steps {
+                script {
+                    sh 'echo "#include<iostream>\nusing namespace std;\nint main() { cout << \"Hello from C++\" << endl; return 0; }" > main.cpp'
+                    sh 'git add main.cpp'
+                    sh 'git commit -m "Added new C++ file"'
+                    sh 'git push origin main'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    sh 'g++ main.cpp -o pes1ug22am086-1'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    sh './pes1ug22am086-1'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application...'
+                // Add deployment logic here
+            }
+        }
+    }
+
+    post {
+        failure {
+            echo 'Pipeline failed'
+        }
+    }
+}
